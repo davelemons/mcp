@@ -11,12 +11,10 @@
 
 """awslabs end-user-messaging MCP Server implementation."""
 
-import os
 import boto3
-from botocore.config import Config
+import os
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
-from typing import Literal
 from pydantic import Field
 
 
@@ -36,8 +34,11 @@ except Exception as e:
 
 
 mcp = FastMCP(
-    "awslabs.end-user-messaging-mcp-server",
-    instructions='Instructions for using this end-user-messaging MCP server. This can be used by clients to improve the LLM''s understanding of available tools, resources, etc. It can be thought of like a ''hint'' to the model. For example, this information MAY be added to the system prompt. Important to be clear, direct, and detailed.',
+    'awslabs.end-user-messaging-mcp-server',
+    instructions='Instructions for using this end-user-messaging MCP server. This can be used by clients to improve the LLM'
+    's understanding of available tools, resources, etc. It can be thought of like a '
+    'hint'
+    ' to the model. For example, this information MAY be added to the system prompt. Important to be clear, direct, and detailed.',
     dependencies=[
         'pydantic',
         'loguru',
@@ -47,20 +48,20 @@ mcp = FastMCP(
 
 @mcp.tool(name='SendTextMessage')
 async def send_text_message(
-    destination_phone_number: str =Field(
+    destination_phone_number: str = Field(
         ...,
-        description="The phone number to send the message to in E.164 Format",
+        description='The phone number to send the message to in E.164 Format',
     ),
     originator_identity: str = Field(
         ...,
-        description="End User Messaging Origination Identity in E.164 Format",
+        description='End User Messaging Origination Identity in E.164 Format',
     ),
     configuration_set_name: str = Field(
-        description="The name of the configuration set to use for the message",
+        description='The name of the configuration set to use for the message',
     ),
     message: str = Field(
         ...,
-        description="The message to send to the user",
+        description='The message to send to the user',
     ),
 ) -> str:
     """SendTextMessage tool implementation.
@@ -74,7 +75,6 @@ async def send_text_message(
     Returns:
         The messageId of the sent message.
     """
-    project_name = 'awslabs end-user-messaging MCP Server'
     create_params = {
         'DestinationPhoneNumber': destination_phone_number,
         'OriginationIdentity': originator_identity,
@@ -88,9 +88,9 @@ async def send_text_message(
     message_id = response['MessageId']
     return message_id
 
+
 def main():
     """Run the MCP server with CLI argument support."""
-
     logger.trace('A trace message.')
     logger.debug('A debug message.')
     logger.info('An info message.')

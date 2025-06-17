@@ -24,22 +24,22 @@ Instructions for using this end-user-messaging MCP server. This can be used by c
 
     {% include "../../src/end-user-messaging-mcp-server/README.md" %}
     ```
-  
+
 * [ ] Reference within the "../../doc/index.md" like this:
 
     ```markdown
     ### end-user-messaging MCP Server
-    
+
     An AWS Labs Model Context Protocol (MCP) server for end-user-messaging
-    
+
     **Features:**
-    
+
     - Feature one
     - Feature two
     - ...
 
     Instructions for using this end-user-messaging MCP server. This can be used by clients to improve the LLM's understanding of available tools, resources, etc. It can be thought of like a 'hint' to the model. For example, this information MAY be added to the system prompt. Important to be clear, direct, and detailed.
-    
+
     [Learn more about the end-user-messaging MCP Server](servers/end-user-messaging-mcp-server.md)
     ```
 

@@ -11,14 +11,14 @@
 """Tests for the end-user-messaging MCP Server."""
 
 import pytest
-from awslabs.end_user_messaging_mcp_server.server import example_tool
-from awslabs.end_user_messaging_mcp_server.server import math_tool
+from awslabs.end_user_messaging_mcp_server.server import example_tool, math_tool
+
 
 @pytest.mark.asyncio
 async def test_example_tool():
     # Arrange
-    test_query = "test query"
-    expected_project_name = "awslabs end-user-messaging MCP Server"
+    test_query = 'test query'
+    expected_project_name = 'awslabs end-user-messaging MCP Server'
     expected_response = f"Hello from {expected_project_name}! Your query was {test_query}. Replace this with your tool's logic"
 
     # Act
@@ -27,11 +27,12 @@ async def test_example_tool():
     # Assert
     assert result == expected_response
 
+
 @pytest.mark.asyncio
 async def test_example_tool_failure():
     # Arrange
-    test_query = "test query"
-    expected_project_name = "awslabs end-user-messaging MCP Server"
+    test_query = 'test query'
+    expected_project_name = 'awslabs end-user-messaging MCP Server'
     expected_response = f"Hello from {expected_project_name}! Your query was {test_query}. Replace this your tool's new logic"
 
     # Act
@@ -39,6 +40,7 @@ async def test_example_tool_failure():
 
     # Assert
     assert result != expected_response
+
 
 @pytest.mark.asyncio
 class TestMathTool:
