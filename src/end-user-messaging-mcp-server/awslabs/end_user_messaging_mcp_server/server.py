@@ -56,12 +56,13 @@ async def send_text_message(
         ...,
         description='End User Messaging Origination Identity in E.164 Format',
     ),
-    configuration_set_name: str = Field(
-        description='The name of the configuration set to use for the message',
-    ),
     message: str = Field(
         ...,
         description='The message to send to the user',
+    ),
+    configuration_set_name: str | None = Field(
+        default=None,
+        description='The name of the configuration set to use for the message',
     ),
 ) -> str:
     """SendTextMessage tool implementation.

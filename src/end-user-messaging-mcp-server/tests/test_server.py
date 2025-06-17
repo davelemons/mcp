@@ -11,71 +11,89 @@
 """Tests for the end-user-messaging MCP Server."""
 
 import pytest
-from awslabs.end_user_messaging_mcp_server.server import example_tool, math_tool
+from awslabs.end_user_messaging_mcp_server.server import send_text_message
+from unittest.mock import MagicMock, ANY
 
 
 @pytest.mark.asyncio
-async def test_example_tool():
-    # Arrange
-    test_query = 'test query'
-    expected_project_name = 'awslabs end-user-messaging MCP Server'
-    expected_response = f"Hello from {expected_project_name}! Your query was {test_query}. Replace this with your tool's logic"
+class TestSendTextMessage:
+    """Tests for the SendTextMessage tool."""
 
-    # Act
-    result = await example_tool(test_query)
+    @pytest.fixture
+    def mock_pinpoint_client(self, monkeypatch):
+        """Create a mock pinpoint client."""
+        mock_client = MagicMock()
+        monkeypatch.setattr('awslabs.end_user_messaging_mcp_server.server.pinpoint_client', mock_client)
+        return mock_client
 
-    # Assert
-    assert result == expected_response
+    async def test_send_text_message_success(self, mock_pinpoint_client):
+        """Test successful text message sending without configuration set."""
+        # Arrange
+        destination_phone = '+1234567890'
+        originator = '+1987654321'
+        message = 'Test message'
+        expected_message_id = 'test-message-id-123'
+        
+        mock_pinpoint_client.send_text_message.return_value = {'MessageId': expected_message_id}
 
+        # Act
+        result = await send_text_message(
+            destination_phone_number=destination_phone,
+            originator_identity=originator,
+            message=message
+        )
 
-@pytest.mark.asyncio
-async def test_example_tool_failure():
-    # Arrange
-    test_query = 'test query'
-    expected_project_name = 'awslabs end-user-messaging MCP Server'
-    expected_response = f"Hello from {expected_project_name}! Your query was {test_query}. Replace this your tool's new logic"
+        # Assert
+        assert result == expected_message_id
+        mock_pinpoint_client.send_text_message.assert_called_once_with(
+            DestinationPhoneNumber=destination_phone,
+            OriginationIdentity=originator,
+            MessageBody=message,
+            ConfigurationSetName=ANY
+        )
 
-    # Act
-    result = await example_tool(test_query)
+    async def test_send_text_message_with_config_set(self, mock_pinpoint_client):
+        """Test text message sending with configuration set."""
+        # Arrange
+        destination_phone = '+1234567890'
+        originator = '+1987654321'
+        message = 'Test message'
+        config_set = 'test-config-set'
+        expected_message_id = 'test-message-id-123'
+        
+        mock_pinpoint_client.send_text_message.return_value = {'MessageId': expected_message_id}
 
-    # Assert
-    assert result != expected_response
+        # Act
+        result = await send_text_message(
+            destination_phone_number=destination_phone,
+            originator_identity=originator,
+            message=message,
+            configuration_set_name=config_set
+        )
 
+        # Assert
+        assert result == expected_message_id
+        mock_pinpoint_client.send_text_message.assert_called_once_with(
+            DestinationPhoneNumber=destination_phone,
+            OriginationIdentity=originator,
+            MessageBody=message,
+            ConfigurationSetName=config_set
+        )
 
-@pytest.mark.asyncio
-class TestMathTool:
-    async def test_addition(self):
-        # Test integer addition
-        assert await math_tool('add', 2, 3) == 5
-        # Test float addition
-        assert await math_tool('add', 2.5, 3.5) == 6.0
+    async def test_send_text_message_client_error(self, mock_pinpoint_client):
+        """Test handling of client errors during text message sending."""
+        # Arrange
+        destination_phone = '+1234567890'
+        originator = '+1987654321'
+        message = 'Test message'
+        
+        mock_pinpoint_client.send_text_message.side_effect = Exception('AWS Client Error')
 
-    async def test_subtraction(self):
-        # Test integer subtraction
-        assert await math_tool('subtract', 5, 3) == 2
-        # Test float subtraction
-        assert await math_tool('subtract', 5.5, 2.5) == 3.0
-
-    async def test_multiplication(self):
-        # Test integer multiplication
-        assert await math_tool('multiply', 4, 3) == 12
-        # Test float multiplication
-        assert await math_tool('multiply', 2.5, 2) == 5.0
-
-    async def test_division(self):
-        # Test integer division
-        assert await math_tool('divide', 6, 2) == 3.0
-        # Test float division
-        assert await math_tool('divide', 5.0, 2.0) == 2.5
-
-    async def test_division_by_zero(self):
-        # Test division by zero raises ValueError
-        with pytest.raises(ValueError) as exc_info:
-            await math_tool('divide', 5, 0)
-        assert str(exc_info.value) == 'The denominator 0 cannot be zero.'
-
-    async def test_invalid_operation(self):
-        # Test invalid operation raises ValueError
-        with pytest.raises(ValueError) as exc_info:
-            await math_tool('power', 2, 3)
-        assert 'Invalid operation: power' in str(exc_info.value)
+        # Act & Assert
+        with pytest.raises(Exception) as exc_info:
+            await send_text_message(
+                destination_phone_number=destination_phone,
+                originator_identity=originator,
+                message=message
+            )
+        assert str(exc_info.value) == 'AWS Client Error'
