@@ -33,6 +33,7 @@ except Exception as e:
     raise
 
 
+
 mcp = FastMCP(
     'awslabs.end-user-messaging-mcp-server',
     instructions='Instructions for using this end-user-messaging MCP server. This can be used by clients to improve the LLM'
@@ -60,7 +61,7 @@ async def send_text_message(
         ...,
         description='The message to send to the user',
     ),
-    configuration_set_name: str | None = Field(
+    configuration_set_name: Optional[str] = Field(
         default=None,
         description='The name of the configuration set to use for the message',
     ),
@@ -76,13 +77,17 @@ async def send_text_message(
     Returns:
         The messageId of the sent message.
     """
+
+    if not sms_origination_identity := os.environ.get('SMS_ORIGINATION_IDENTITY'):
+        raise Exception('SMS_ORIGINATION_IDENTITY is not set')
+
     create_params = {
         'DestinationPhoneNumber': destination_phone_number,
-        'OriginationIdentity': originator_identity,
+        'OriginationIdentity': sms_origination_identity,
         'MessageBody': message,
     }
 
-    if configuration_set_name:
+    if configuration_set_name := os.environ.get('CONFIGURATION_SET_NAME'):
         create_params['ConfigurationSetName'] = configuration_set_name
 
     response = pinpoint_client.send_text_message(**create_params)
