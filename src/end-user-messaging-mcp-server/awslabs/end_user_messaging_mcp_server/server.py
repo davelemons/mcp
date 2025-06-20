@@ -53,18 +53,10 @@ async def send_text_message(
         ...,
         description='The phone number to send the message to in E.164 Format',
     ),
-    originator_identity: str = Field(
-        ...,
-        description='End User Messaging Origination Identity in E.164 Format',
-    ),
     message: str = Field(
         ...,
         description='The message to send to the user',
-    ),
-    configuration_set_name: Optional[str] = Field(
-        default=None,
-        description='The name of the configuration set to use for the message',
-    ),
+    )
 ) -> str:
     """SendTextMessage tool implementation.
 
@@ -78,9 +70,11 @@ async def send_text_message(
         The messageId of the sent message.
     """
 
-    if not sms_origination_identity := os.environ.get('SMS_ORIGINATION_IDENTITY'):
-        raise Exception('SMS_ORIGINATION_IDENTITY is not set')
-
+    # check if we have an originator identity in the environment
+    sms_origination_identity = os.environ.get('SMS_ORIGINATION_IDENTITY')
+    if not sms_origination_identity:
+        raise Exception('SMS_ORIGINATION_IDENTITY is not set. Please set the SMS_ORIGINATION_IDENTITY environment variable.')
+    
     create_params = {
         'DestinationPhoneNumber': destination_phone_number,
         'OriginationIdentity': sms_origination_identity,
