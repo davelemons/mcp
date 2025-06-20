@@ -36,10 +36,9 @@ except Exception as e:
 
 mcp = FastMCP(
     'awslabs.end-user-messaging-mcp-server',
-    instructions='Instructions for using this end-user-messaging MCP server. This can be used by clients to improve the LLM'
-    's understanding of available tools, resources, etc. It can be thought of like a '
-    'hint'
-    ' to the model. For example, this information MAY be added to the system prompt. Important to be clear, direct, and detailed.',
+    instructions='This MCP server is used to send text messages to users. It requires the SMS_ORIGINATION_IDENTITY environment variable'
+    ' to be set. The SMS_ORIGINATION_IDENTITY is the phone number that will be used to send the message. The SMS_ORIGINATION_IDENTITY is in E.164 format. '
+    ' users can also set the CONFIGURATION_SET_NAME environment variable to use a specific configuration set. ',
     dependencies=[
         'pydantic',
         'loguru',
@@ -55,15 +54,13 @@ async def send_text_message(
     ),
     message: str = Field(
         ...,
-        description='The message to send to the user',
+        description='The message to send to the user. The message should be a string and should not exceed 160 characters.',
     )
 ) -> str:
     """SendTextMessage tool implementation.
 
     Parameters:
         destination_phone_number (str): The phone number to send the message to in E.164 Format.
-        originator_identity (str): End User Messaging Origination Identity.
-        configuration_set_name (str): The name of the configuration set to use for the message.
         message (str): The message to send to the user.
 
     Returns:
