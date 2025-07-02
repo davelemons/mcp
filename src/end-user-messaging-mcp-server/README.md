@@ -2,6 +2,8 @@
 
 An AWS Labs Model Context Protocol (MCP) server for end-user-messaging
 
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=awslabs.aws-end-user-messaging-mcp-server&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMnV2JTIwLS1kaXJlY3RvcnklMjAlMkZVc2VycyUyRmRhdmVsZW0lMkZEb2N1bWVudHMlMkZnaXRodWIlMkZkYXZlbGVtb25zJTJGbWNwJTJGc3JjJTJGZW5kLXVzZXItbWVzc2FnaW5nLW1jcC1zZXJ2ZXIlMkZhd3NsYWJzJTJGZW5kX3VzZXJfbWVzc2FnaW5nX21jcF9zZXJ2ZXIlMjBydW4lMjBzZXJ2ZXIucHklMjIlMkMlMjJlbnYlMjIlM0ElN0IlMjJGQVNUTUNQX0xPR19MRVZFTCUyMiUzQSUyMkVSUk9SJTIyJTJDJTIyQVdTX1JFR0lPTiUyMiUzQSUyMnVzLWVhc3QtMSUyMiUyQyUyMkFXU19QUk9GSUxFJTIyJTNBJTIyY2RzJTIyJTJDJTIyU01TX09SSUdJTkFUSU9OX0lERU5USVRZJTIyJTNBJTIyMTI1NDY1NTMyMDYlMjIlMkMlMjJDT05GSUdVUkFUSU9OX1NFVF9OQU1FJTIyJTNBJTIyZW5nYWdlbWVudGRiLWV1bS1jb25maWd1cmF0aW9uLXNldCUyMiU3RCUyQyUyMmRpc2FibGVkJTIyJTNBZmFsc2UlMkMlMjJhdXRvQXBwcm92ZSUyMiUzQSU1QiU1RCU3RA%3D%3D)
+
 ## Instructions
 
 Instructions for using this end-user-messaging MCP server. This can be used by clients to improve the LLM's understanding of available tools, resources, etc. It can be thought of like a 'hint' to the model. For example, this information MAY be added to the system prompt. Important to be clear, direct, and detailed.
